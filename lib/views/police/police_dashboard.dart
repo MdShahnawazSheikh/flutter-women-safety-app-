@@ -121,12 +121,13 @@ class _PoliceDashboardState extends State<PoliceDashboard> {
                   ),
             const Vspace(size: 10),
             WideElevatedButton(
-                size: size,
-                onCLick: () {
-                  Get.to(() => const AccountScreen());
-                },
-                label: "Edit Profile",
-                primary: Colors.black87),
+              size: size,
+              onCLick: () {
+                Get.to(() => const AccountScreen());
+              },
+              label: "Edit Profile",
+              primary: Colors.black87,
+            ),
           ],
         ),
       ),
