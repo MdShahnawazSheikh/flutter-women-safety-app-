@@ -42,6 +42,8 @@ class _PoliceDashboardState extends State<PoliceDashboard> {
 
   loadData() async {
     policeData = (await policeDistressHandler.getPoliceInfo(userData["id"]))!;
+    await policeDistressHandler.getPoliceInfo(userData["id"]);
+    await policeDistressHandler.registerPoliceLocation();
     isPoliceAvailable = policeData["isAvailable"];
     log(policeData.toString());
   }
