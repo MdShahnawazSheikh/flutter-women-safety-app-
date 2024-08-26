@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +15,7 @@ class RegisterViewModel extends GetxController {
 
   final formkey1 = GlobalKey<FormState>();
   final formdata = <String, Object>{};
-  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+  // final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
   Future<void> signUp(String usertype) async {
     if (formkey1.currentState!.validate()) {
@@ -23,8 +25,8 @@ class RegisterViewModel extends GetxController {
         showError('Confirm password does not match');
       } else {
         try {
+          // String? token = await _fcm.getToken();
           isLoading(true);
-          String? token = await _fcm.getToken();
 
           await auth
               .createUserWithEmailAndPassword(
@@ -35,16 +37,15 @@ class RegisterViewModel extends GetxController {
               .then((val) async {
             var db = firestore.collection(usercollection).doc(val.user!.uid);
             UserModel usermodel = UserModel(
-              name: formdata['name'].toString(),
-              phone: formdata['phone'].toString(),
-              childemail: formdata['email'].toString(),
-              type: usertype,
-              imageUrl:
-                  'https://static-00.iconduck.com/assets.00/profile-circle-icon-2048x2048-cqe5466q.png',
-              parentemail: formdata['gmail'].toString(),
-              id: auth.currentUser!.uid,
-              fcmToken: token!,
-            );
+                name: formdata['name'].toString(),
+                phone: formdata['phone'].toString(),
+                childemail: formdata['email'].toString(),
+                type: usertype,
+                imageUrl:
+                    'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
+                parentemail: formdata['gmail'].toString(),
+                id: auth.currentUser!.uid,
+                fcmToken: "token");
 
             await db.set(usermodel.toJson()).whenComplete(() {
               Get.off(() => const LoginScreen());
@@ -61,6 +62,7 @@ class RegisterViewModel extends GetxController {
         } catch (error) {
           isLoading(false);
           showError(error.toString());
+          log(error.toString());
         } finally {
           isLoading(
               false); // Ensure isLoading is reset regardless of success or failure

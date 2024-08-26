@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:developer';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -31,13 +33,24 @@ class _DistressScreenState extends State<DistressScreen> {
   BottomSheetControllers locationController = Get.put(BottomSheetControllers());
   PoliceDistressHandler policeDistressHandler =
       Get.put(PoliceDistressHandler());
-
+  Timer? _timer;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     handleDistress();
     sendVideo();
+    _timer = Timer.periodic(
+      const Duration(seconds: 10),
+      (timer) {
+        log("Updating Location...");
+        locationController.getCurrentLocation();
+        DistressSignalService().updateLocation(userData["id"], [
+          locationController.currentPosition!.longitude,
+          locationController.currentPosition!.latitude
+        ]);
+      },
+    );
   }
 
   sendVideo() async {
@@ -49,7 +62,7 @@ class _DistressScreenState extends State<DistressScreen> {
     isLoading.value = true;
     policeInfo = await DistressSignalHandler().findNearestPolice(
         locationController.currentPosition!.latitude,
-        locationController.currentPosition!.latitude);
+        locationController.currentPosition!.longitude);
     policeLocation = await policeDistressHandler.getAddressbyCoords(
         policeInfo["location"].longitude, policeInfo["location"].latitude);
     isLoading.value = false;
@@ -177,6 +190,12 @@ class _DistressScreenState extends State<DistressScreen> {
               ),
             ),
     );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Cancel the timer when the widget is disposed
+    super.dispose();
   }
 }
 

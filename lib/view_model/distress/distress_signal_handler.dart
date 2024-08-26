@@ -74,7 +74,9 @@ class DistressSignalHandler extends GetxController {
         userData["id"],
         DistressSignal(
           distressCaller: userData["name"],
+          distressCallerLocation: [userLongitude, userLatitude],
           responder: tempPoliceData['name'],
+          responderId: tempPoliceData["id"],
           distressCallerPhone: int.parse(userData["phone"]),
           responderBadgeNumber: tempPoliceData["badgeNumber"],
           video: "",

@@ -32,6 +32,31 @@ sendMessage(String messageBody) async {
   }
 }
 
+Future<void> sendNotification(
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin, {
+  required String title,
+  required String body,
+}) async {
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+    'emergency_notification_channel', // Channel ID
+    'DistressNotification', // Channel Name
+    importance: Importance.high,
+    priority: Priority.high,
+    ticker: 'ticker',
+  );
+  const NotificationDetails platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+
+  await flutterLocalNotificationsPlugin.show(
+    0, // Notification ID
+    title,
+    body,
+    platformChannelSpecifics,
+    payload: 'item x',
+  );
+}
+
 Future<void> initiallizedLocalNotification() async {
   final service = FlutterBackgroundService();
 

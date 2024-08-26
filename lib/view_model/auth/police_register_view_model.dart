@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:women_safety_app/res/const/firebase_const.dart';
 import 'package:women_safety_app/views/police/police_dashboard.dart';
+import 'package:women_safety_app/views/selection/auth_selection_screen.dart';
 
 class PoliceRegisterModel extends GetxController {
   var isPassword = true.obs;
   var isCPassword = true.obs;
   var isLoading = false.obs;
-  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+  // final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   final formkey1 = GlobalKey<FormState>();
   final formdata = <String, Object>{};
 
@@ -22,7 +23,7 @@ class PoliceRegisterModel extends GetxController {
       } else {
         try {
           isLoading(true);
-          String? token = await _fcm.getToken();
+          // String? token = await _fcm.getToken();
           await auth
               .createUserWithEmailAndPassword(
                   email: formdata['email'].toString(),
@@ -35,14 +36,14 @@ class PoliceRegisterModel extends GetxController {
               email: formdata['email'].toString(),
               badgeNumber: formdata['badgeNumber'].toString(),
               imageUrl:
-                  'https://static-00.iconduck.com/assets.00/profile-circle-icon-2048x2048-cqe5466q.png',
+                  'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
               id: auth.currentUser!.uid,
               type: 'police',
-              fcmToken: token!,
+              fcmToken: "token!",
             );
 
             await db.set(policeModel.toJson()).whenComplete(() {
-              Get.off(() => const PoliceDashboard());
+              Get.off(() => const AuthSelectionScreen());
               isLoading(false);
             });
           });

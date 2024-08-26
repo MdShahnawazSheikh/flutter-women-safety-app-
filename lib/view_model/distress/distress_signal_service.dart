@@ -19,6 +19,17 @@ class DistressSignalService {
     }
   }
 
+  Future<void> updateLocation(String distressID, List location) async {
+    try {
+      await _firestore.collection(collectionPath).doc(distressID).set({
+        "distressCallerLocation": [location[1], location[0]]
+      }, SetOptions(merge: true));
+      print('Distress signal added/updated successfully');
+    } catch (e) {
+      print('Error adding/updating distress signal: $e');
+    }
+  }
+
   // Read Distress Signal
   Future<DistressSignal?> getDistressSignal(String distressID) async {
     try {
