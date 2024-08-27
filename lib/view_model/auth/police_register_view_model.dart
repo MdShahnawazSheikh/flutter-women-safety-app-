@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:women_safety_app/res/const/firebase_const.dart';
+import 'package:women_safety_app/view_model/police_distress_actions/police_distress_handler.dart';
 import 'package:women_safety_app/views/police/police_dashboard.dart';
 import 'package:women_safety_app/views/selection/auth_selection_screen.dart';
 
@@ -46,6 +47,7 @@ class PoliceRegisterModel extends GetxController {
               Get.off(() => const AuthSelectionScreen());
               isLoading(false);
             });
+            // PoliceDistressHandler().registerPoliceLocation();
           });
         } on FirebaseAuthException catch (e) {
           if (e.code == 'weak-password') {

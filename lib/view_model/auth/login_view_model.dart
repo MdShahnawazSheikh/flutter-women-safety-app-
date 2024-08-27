@@ -7,6 +7,7 @@ import 'package:women_safety_app/data/global/appdata.dart';
 import 'package:women_safety_app/data/shared_preferences/shared_preferences.dart';
 import 'package:women_safety_app/res/const/firebase_const.dart';
 import 'package:women_safety_app/res/utils/utils.dart';
+import 'package:women_safety_app/view_model/police_distress_actions/police_distress_handler.dart';
 import 'package:women_safety_app/views/child/bottom_nav_bar.dart';
 import 'package:women_safety_app/views/parents/parent_home_screen.dart';
 import 'package:women_safety_app/views/police/police_dashboard.dart';
@@ -89,10 +90,12 @@ class LoginViewModel extends GetxController {
                 isLoading.value = true;
                 // Handling police Login
                 // Saving identifier
+
                 MySharedPrefernces.userSaveType('police');
                 // Saving userdata
                 MySharedPrefernces().saveUserData(value.data()!);
                 userData = value.data()!;
+                PoliceDistressHandler().registerPoliceLocation();
                 isLoading.value = false;
                 Get.off(() => const PoliceDashboard());
               } else {
