@@ -17,6 +17,7 @@ import 'package:women_safety_app/view_model/bottom_sheat_view_model.dart';
 import 'package:women_safety_app/view_model/police_distress_actions/constants.dart';
 import 'package:women_safety_app/view_model/police_distress_actions/police_distress_handler.dart';
 import 'package:women_safety_app/views/child/accounts/accounts_screen.dart';
+import 'package:women_safety_app/views/criminal_recognition/criminal_recognition.dart';
 import 'package:women_safety_app/views/police/notification_handler.dart';
 
 class PoliceDashboard extends StatefulWidget {
@@ -135,6 +136,15 @@ class _PoliceDashboardState extends State<PoliceDashboard> {
             WideElevatedButton(
               size: size,
               onCLick: () {
+                Get.to(() => const CriminalRecognitionScreen());
+              },
+              label: "Criminal Recognition",
+              primary: Colors.blueGrey,
+            ),
+            const Vspace(size: 10),
+            WideElevatedButton(
+              size: size,
+              onCLick: () {
                 Get.to(() => const AccountScreen());
               },
               label: "Edit Profile",
@@ -177,6 +187,7 @@ class _PoliceDashboardState extends State<PoliceDashboard> {
 
                 final distressSignals = snapshot.data!.docs;
                 if (distressSignals.isNotEmpty) {
+                  locationController.getCurrentLocation();
                   final tempDistressSignal =
                       distressSignals[0].data() as Map<String, dynamic>;
                   sendNotification(flutterLocalNotificationsPlugin,
@@ -226,7 +237,6 @@ class _PoliceDashboardState extends State<PoliceDashboard> {
                                     'Badge Number: ${distressSignal['responderBadgeNumber']}'),
                                 Text(
                                     'Resolved: ${distressSignal['resolved'] ? 'Yes' : 'No'}'),
-                                // You might want to use a more sophisticated widget for video display
                               ],
                             ),
                             isThreeLine: true,
