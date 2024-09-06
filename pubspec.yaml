@@ -103,6 +103,7 @@ flutter:
   assets:
     - assets/
     - lib/res/png/
+    - lib/res/criminals/
     - lib/res/lottie/
   #   - images/a_dot_ham.jpeg
 

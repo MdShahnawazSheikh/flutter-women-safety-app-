@@ -18,11 +18,12 @@ class _CriminalRecognitionScreenState extends State<CriminalRecognitionScreen> {
   late Future<void> _initializeControllerFuture;
   late Criminal criminalData;
   bool isScanning = false;
+  int criminalIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    criminalData = getRandomCriminal();
+    criminalData = getCriminals()[criminalIndex];
     _initializeCamera();
   }
 
@@ -43,24 +44,42 @@ class _CriminalRecognitionScreenState extends State<CriminalRecognitionScreen> {
     setState(() {
       isScanning = true;
     });
-    // await _cameraController.pausePreview();
-    // Simulate scanning delay
+
     Timer(const Duration(seconds: 3), () {
       setState(() {
         isScanning = false;
-        criminalData = getRandomCriminal();
+        // Get the list of criminals and reset the index if necessary
+        List<Criminal> criminals = getCriminals();
+        criminalData = criminals[criminalIndex];
+
+        // Update the index and reset if necessary
+        criminalIndex += 1;
+        if (criminalIndex >= criminals.length) {
+          criminalIndex = 0; // Reset index when reaching the end of the list
+        }
       });
+
       Get.dialog(
         AlertDialog(
           title: const Text('Criminal Found'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Container(
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                child: Image.asset(
+                  height: Get.height / 4,
+                  width: Get.width / 2,
+                  criminalData.imageUrl,
+                  fit: BoxFit.cover,
+                ),
+              ),
               ListTile(
                 contentPadding: const EdgeInsets.all(0),
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(criminalData.imageUrl),
-                ),
+                /*  leading: CircleAvatar(
+                  backgroundImage: AssetImage(criminalData.imageUrl),
+                ), */
                 title: Text(criminalData.name),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,21 +98,7 @@ class _CriminalRecognitionScreenState extends State<CriminalRecognitionScreen> {
                         Text(criminalData.gender),
                       ],
                     ),
-                    Row(
-                      children: [
-                        const Icon(Icons.date_range),
-                        Text(criminalData.dob),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                        Text(criminalData.location),
-                      ],
-                    ),
+                    Text('Criminal ID: ${criminalData.id}'),
                     Text('Past Violations: ${criminalData.charge}'),
                   ],
                 ),
@@ -104,7 +109,6 @@ class _CriminalRecognitionScreenState extends State<CriminalRecognitionScreen> {
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop();
-                // await _cameraController.resumePreview();
               },
               child: const Text('Close'),
             ),
